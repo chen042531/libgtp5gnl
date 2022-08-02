@@ -892,7 +892,7 @@ EXPORT_SYMBOL(gtp5g_print_pdr);
 // }
 
 enum gtp5g_version {
-    GTP5G_VERSION = 3,
+    GTP5G_VERSION = 4,
 };
 
 static int genl_gtp5g_version_validate_cb(const struct nlattr *attr, void *data)
@@ -922,7 +922,7 @@ static int genl_gtp5g_version_cb(const struct nlmsghdr *nlh, void *data)
 
     if (pdr_tb[GTP5G_VERSION]){
         printf(">>> exist2\n");
-        ver = mnl_attr_get_u16(pdr_tb[GTP5G_VERSION]);
+        ver = mnl_attr_get_u32(pdr_tb[GTP5G_VERSION]);
         printf(">>> version: %u", ver);
     }
         
