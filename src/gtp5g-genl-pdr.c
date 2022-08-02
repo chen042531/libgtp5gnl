@@ -445,8 +445,8 @@ static int genl_gtp5g_attr_list_cb(const struct nlmsghdr *nlh, void *data)
     else if (pdr_tb[GTP5G_PDR_ID])
         printf("[PDR No.%u Info]\n", mnl_attr_get_u16(pdr_tb[GTP5G_PDR_ID]));
 
-    if (pdr_tb[GTP5G_PDR_PRECEDENCE])
-        printf("%s- Precedence: %u\n", indent_str, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_PRECEDENCE]));
+    // if (pdr_tb[GTP5G_PDR_PRECEDENCE])
+    //     printf("%s- Precedence: %u\n", indent_str, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_PRECEDENCE]));
     if (pdr_tb[GTP5G_OUTER_HEADER_REMOVAL])
         printf("%s- Outer Header Removal: %u\n", indent_str, mnl_attr_get_u8(pdr_tb[GTP5G_OUTER_HEADER_REMOVAL]));
 
@@ -640,7 +640,7 @@ void gtp5g_print_pdr(struct gtp5g_pdr *pdr)
     else
         printf("[PDR No.%u Info]\n", pdr->id);
 
-    printf("%s- Precedence: %u\n", indent_str, *pdr->precedence);
+    // printf("%s- Precedence: %u\n", indent_str, *pdr->precedence);
     if (pdr->outer_hdr_removal)
         printf("%s- Outer Header Removal: %u\n", indent_str, *pdr->outer_hdr_removal);
     
@@ -928,7 +928,7 @@ struct gtp5g_v {
 
 static int genl_gtp5g_version_cb2(const struct nlmsghdr *nlh, void *data)
 {
-    struct nlattr *pdr_tb[GTP5G_PDR_ATTR_MAX + 1] = {};
+    struct nlattr *ver_tb[1] = {};
 
     struct genlmsghdr *genl;
     struct gtp5g_v *ver;
@@ -936,14 +936,14 @@ static int genl_gtp5g_version_cb2(const struct nlmsghdr *nlh, void *data)
     struct in_addr ipv4;
     const char *pstr;
 
-    printf(">>>>>>version678\n");
+    printf(">>>>>>versi8\n");
     // mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_pdr_validate_cb, pdr_tb);
-    mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_version_validate_cb, pdr_tb);
+    mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_version_validate_cb, ver_tb);
     ver = *(struct gtp5g_v **) data = gtp5g_pdr_alloc();
 
-    if (pdr_tb[GTP5G_VERSION]){
-        printf(">> %s", mnl_attr_get_str(pdr_tb[GTP5G_VERSION]));
-        gtp5g_pdr_set_id(ver, mnl_attr_get_str(pdr_tb[GTP5G_VERSION]));
+    if (ver_tb[GTP5G_VERSION]){
+        printf(">> %s", mnl_attr_get_str(ver_tb[GTP5G_VERSION]));
+        gtp5g_pdr_set_id(ver, mnl_attr_get_str(ver_tb[GTP5G_VERSION]));
     }
         
     
@@ -978,13 +978,13 @@ static int genl_gtp5g_version_cb(const struct nlmsghdr *nlh, void *data)
     // struct in_addr ipv4;
     // const char *pstr;
 
-    printf(">>> gogo2\n");
+    printf(">>> gogo233\n");
     mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_version_validate_cb, pdr_tb);
     // pdr = *(struct gtp5g_pdr **) data = gtp5g_pdr_alloc();
 
-    if (pdr_tb[GTP5G_VERSION]){
+    if (pdr_tb[3]){
         printf(">>> exist2\n");
-        ver = mnl_attr_get_u32(pdr_tb[GTP5G_VERSION]);
+        ver = mnl_attr_get_u32(pdr_tb[3]);
         printf(">>> version: %u", ver);
     }
         
