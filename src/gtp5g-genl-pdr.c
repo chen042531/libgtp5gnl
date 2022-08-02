@@ -766,133 +766,133 @@ void gtp5g_print_pdr(struct gtp5g_pdr *pdr)
 }
 EXPORT_SYMBOL(gtp5g_print_pdr);
 
-// static int genl_gtp5g_attr_cb(const struct nlmsghdr *nlh, void *data)
-// {
-//     struct nlattr *pdr_tb[GTP5G_PDR_ATTR_MAX + 1] = {};
-//     struct nlattr *pdi_tb[GTP5G_PDI_ATTR_MAX + 1] = {};
-//     struct nlattr *f_teid_tb[GTP5G_F_TEID_ATTR_MAX + 1] = {};
-//     struct nlattr *sdf_tb[GTP5G_SDF_FILTER_ATTR_MAX + 1] = {};
-//     struct nlattr *rule_tb[GTP5G_FLOW_DESCRIPTION_ATTR_MAX + 1] = {};
+static int genl_gtp5g_attr_cb(const struct nlmsghdr *nlh, void *data)
+{
+    struct nlattr *pdr_tb[GTP5G_PDR_ATTR_MAX + 1] = {};
+    struct nlattr *pdi_tb[GTP5G_PDI_ATTR_MAX + 1] = {};
+    struct nlattr *f_teid_tb[GTP5G_F_TEID_ATTR_MAX + 1] = {};
+    struct nlattr *sdf_tb[GTP5G_SDF_FILTER_ATTR_MAX + 1] = {};
+    struct nlattr *rule_tb[GTP5G_FLOW_DESCRIPTION_ATTR_MAX + 1] = {};
 
-//     struct genlmsghdr *genl;
-//     struct gtp5g_pdr *pdr;
-//     struct ip_filter_rule *rule;
-//     struct in_addr ipv4;
-//     const char *pstr;
+    struct genlmsghdr *genl;
+    struct gtp5g_pdr *pdr;
+    struct ip_filter_rule *rule;
+    struct in_addr ipv4;
+    const char *pstr;
 
-//     mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_pdr_validate_cb, pdr_tb);
-//     pdr = *(struct gtp5g_pdr **) data = gtp5g_pdr_alloc();
+    mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_pdr_validate_cb, pdr_tb);
+    pdr = *(struct gtp5g_pdr **) data = gtp5g_pdr_alloc();
 
-//     if (pdr_tb[GTP5G_PDR_ID])
-//         gtp5g_pdr_set_id(pdr, mnl_attr_get_u16(pdr_tb[GTP5G_PDR_ID]));
+    if (pdr_tb[GTP5G_PDR_ID])
+        gtp5g_pdr_set_id(pdr, mnl_attr_get_u16(pdr_tb[GTP5G_PDR_ID]));
     
-//     if (pdr_tb[GTP5G_PDR_SEID])
-//         gtp5g_pdr_set_seid(pdr, mnl_attr_get_u64(pdr_tb[GTP5G_PDR_SEID]));
+    if (pdr_tb[GTP5G_PDR_SEID])
+        gtp5g_pdr_set_seid(pdr, mnl_attr_get_u64(pdr_tb[GTP5G_PDR_SEID]));
 
-//     if (pdr_tb[GTP5G_PDR_PRECEDENCE])
-//         gtp5g_pdr_set_precedence(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_PRECEDENCE]));
+    if (pdr_tb[GTP5G_PDR_PRECEDENCE])
+        gtp5g_pdr_set_precedence(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_PRECEDENCE]));
 
-//     if (pdr_tb[GTP5G_OUTER_HEADER_REMOVAL])
-//         gtp5g_pdr_set_outer_header_removal(pdr, mnl_attr_get_u8(pdr_tb[GTP5G_OUTER_HEADER_REMOVAL]));
+    if (pdr_tb[GTP5G_OUTER_HEADER_REMOVAL])
+        gtp5g_pdr_set_outer_header_removal(pdr, mnl_attr_get_u8(pdr_tb[GTP5G_OUTER_HEADER_REMOVAL]));
 
-//     if (pdr_tb[GTP5G_PDR_PDI]) {
-//         mnl_attr_parse_nested(pdr_tb[GTP5G_PDR_PDI], genl_gtp5g_pdi_validate_cb, pdi_tb);
+    if (pdr_tb[GTP5G_PDR_PDI]) {
+        mnl_attr_parse_nested(pdr_tb[GTP5G_PDR_PDI], genl_gtp5g_pdi_validate_cb, pdi_tb);
 
-//         if (pdi_tb[GTP5G_PDI_UE_ADDR_IPV4]) {
-//             ipv4.s_addr = mnl_attr_get_u32(pdi_tb[GTP5G_PDI_UE_ADDR_IPV4]);
-//             gtp5g_pdr_set_ue_addr_ipv4(pdr, &ipv4);
-//         }
+        if (pdi_tb[GTP5G_PDI_UE_ADDR_IPV4]) {
+            ipv4.s_addr = mnl_attr_get_u32(pdi_tb[GTP5G_PDI_UE_ADDR_IPV4]);
+            gtp5g_pdr_set_ue_addr_ipv4(pdr, &ipv4);
+        }
 
-//         if (pdi_tb[GTP5G_PDI_F_TEID]) {
-//             mnl_attr_parse_nested(pdi_tb[GTP5G_PDI_F_TEID], genl_gtp5g_f_teid_validate_cb, f_teid_tb);
+        if (pdi_tb[GTP5G_PDI_F_TEID]) {
+            mnl_attr_parse_nested(pdi_tb[GTP5G_PDI_F_TEID], genl_gtp5g_f_teid_validate_cb, f_teid_tb);
 
-//             ipv4.s_addr = mnl_attr_get_u32(f_teid_tb[GTP5G_F_TEID_GTPU_ADDR_IPV4]);
-//             gtp5g_pdr_set_local_f_teid(pdr, mnl_attr_get_u32(f_teid_tb[GTP5G_F_TEID_I_TEID]), &ipv4);
-//         }
+            ipv4.s_addr = mnl_attr_get_u32(f_teid_tb[GTP5G_F_TEID_GTPU_ADDR_IPV4]);
+            gtp5g_pdr_set_local_f_teid(pdr, mnl_attr_get_u32(f_teid_tb[GTP5G_F_TEID_I_TEID]), &ipv4);
+        }
 
-//         if (pdi_tb[GTP5G_PDI_SDF_FILTER]) {
-//             mnl_attr_parse_nested(pdi_tb[GTP5G_PDI_SDF_FILTER], genl_gtp5g_sdf_filter_validate_cb, sdf_tb);
+        if (pdi_tb[GTP5G_PDI_SDF_FILTER]) {
+            mnl_attr_parse_nested(pdi_tb[GTP5G_PDI_SDF_FILTER], genl_gtp5g_sdf_filter_validate_cb, sdf_tb);
 
-//             if (sdf_tb[GTP5G_SDF_FILTER_FLOW_DESCRIPTION]) {
-//                 mnl_attr_parse_nested(sdf_tb[GTP5G_SDF_FILTER_FLOW_DESCRIPTION],
-//                                       genl_gtp5g_flow_description_validate_cb, rule_tb);
+            if (sdf_tb[GTP5G_SDF_FILTER_FLOW_DESCRIPTION]) {
+                mnl_attr_parse_nested(sdf_tb[GTP5G_SDF_FILTER_FLOW_DESCRIPTION],
+                                      genl_gtp5g_flow_description_validate_cb, rule_tb);
 
-//                 if (!pdr->pdi->sdf)
-//                     pdr->pdi->sdf = calloc(1, sizeof(*pdr->pdi->sdf));
+                if (!pdr->pdi->sdf)
+                    pdr->pdi->sdf = calloc(1, sizeof(*pdr->pdi->sdf));
 
-//                 rule = pdr->pdi->sdf->rule;
+                rule = pdr->pdi->sdf->rule;
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_ACTION])
-//                     rule->action = mnl_attr_get_u8(rule_tb[GTP5G_FLOW_DESCRIPTION_ACTION]);
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_ACTION])
+                    rule->action = mnl_attr_get_u8(rule_tb[GTP5G_FLOW_DESCRIPTION_ACTION]);
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_DIRECTION])
-//                     rule->direction = mnl_attr_get_u8(rule_tb[GTP5G_FLOW_DESCRIPTION_DIRECTION]);
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_DIRECTION])
+                    rule->direction = mnl_attr_get_u8(rule_tb[GTP5G_FLOW_DESCRIPTION_DIRECTION]);
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_PROTOCOL])
-//                     rule->proto = mnl_attr_get_u8(rule_tb[GTP5G_FLOW_DESCRIPTION_PROTOCOL]);
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_PROTOCOL])
+                    rule->proto = mnl_attr_get_u8(rule_tb[GTP5G_FLOW_DESCRIPTION_PROTOCOL]);
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_IPV4])
-//                     rule->src.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_IPV4]);
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_IPV4])
+                    rule->src.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_IPV4]);
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_MASK])
-//                     rule->smask.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_MASK]);
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_MASK])
+                    rule->smask.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_MASK]);
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]) {
-//                     rule->sport_num = mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]) / (sizeof(uint32_t) / sizeof(char));
-//                     rule->sport_list = calloc(1, mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]));
-//                     memcpy(rule->sport_list, mnl_attr_get_payload(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]), mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]));
-//                 }
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]) {
+                    rule->sport_num = mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]) / (sizeof(uint32_t) / sizeof(char));
+                    rule->sport_list = calloc(1, mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]));
+                    memcpy(rule->sport_list, mnl_attr_get_payload(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]), mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_SRC_PORT]));
+                }
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_IPV4])
-//                     rule->dest.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_IPV4]);
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_IPV4])
+                    rule->dest.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_IPV4]);
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_MASK])
-//                     rule->dest.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_MASK]);
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_MASK])
+                    rule->dest.s_addr = mnl_attr_get_u32(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_MASK]);
 
-//                 if (rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]) {
-//                     rule->dport_num = mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]) / (sizeof(uint32_t) / sizeof(char));
-//                     rule->dport_list = calloc(1, mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]));
-//                     memcpy(rule->dport_list, mnl_attr_get_payload(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]), mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]));
-//                 }
-//             }
+                if (rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]) {
+                    rule->dport_num = mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]) / (sizeof(uint32_t) / sizeof(char));
+                    rule->dport_list = calloc(1, mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]));
+                    memcpy(rule->dport_list, mnl_attr_get_payload(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]), mnl_attr_get_payload_len(rule_tb[GTP5G_FLOW_DESCRIPTION_DEST_PORT]));
+                }
+            }
 
-//             if (sdf_tb[GTP5G_SDF_FILTER_TOS_TRAFFIC_CLASS])
-//                 gtp5g_pdr_set_tos_traffic_class(pdr, mnl_attr_get_u16(sdf_tb[GTP5G_SDF_FILTER_TOS_TRAFFIC_CLASS]));
+            if (sdf_tb[GTP5G_SDF_FILTER_TOS_TRAFFIC_CLASS])
+                gtp5g_pdr_set_tos_traffic_class(pdr, mnl_attr_get_u16(sdf_tb[GTP5G_SDF_FILTER_TOS_TRAFFIC_CLASS]));
 
-//             if (sdf_tb[GTP5G_SDF_FILTER_SECURITY_PARAMETER_INDEX])
-//                 gtp5g_pdr_set_security_param_idx(pdr, mnl_attr_get_u32(sdf_tb[GTP5G_SDF_FILTER_SECURITY_PARAMETER_INDEX]));
+            if (sdf_tb[GTP5G_SDF_FILTER_SECURITY_PARAMETER_INDEX])
+                gtp5g_pdr_set_security_param_idx(pdr, mnl_attr_get_u32(sdf_tb[GTP5G_SDF_FILTER_SECURITY_PARAMETER_INDEX]));
 
-//             if (sdf_tb[GTP5G_SDF_FILTER_FLOW_LABEL])
-//                 gtp5g_pdr_set_flow_label(pdr, mnl_attr_get_u32(sdf_tb[GTP5G_SDF_FILTER_FLOW_LABEL]));
+            if (sdf_tb[GTP5G_SDF_FILTER_FLOW_LABEL])
+                gtp5g_pdr_set_flow_label(pdr, mnl_attr_get_u32(sdf_tb[GTP5G_SDF_FILTER_FLOW_LABEL]));
 
-//             if (sdf_tb[GTP5G_SDF_FILTER_SDF_FILTER_ID])
-//                 gtp5g_pdr_set_sdf_filter_id(pdr, mnl_attr_get_u32(sdf_tb[GTP5G_SDF_FILTER_SDF_FILTER_ID]));
-//         }
-//     }
+            if (sdf_tb[GTP5G_SDF_FILTER_SDF_FILTER_ID])
+                gtp5g_pdr_set_sdf_filter_id(pdr, mnl_attr_get_u32(sdf_tb[GTP5G_SDF_FILTER_SDF_FILTER_ID]));
+        }
+    }
 
-//     if (pdr_tb[GTP5G_PDR_FAR_ID])
-//         gtp5g_pdr_set_far_id(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_FAR_ID]));
+    if (pdr_tb[GTP5G_PDR_FAR_ID])
+        gtp5g_pdr_set_far_id(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_FAR_ID]));
 
-//     if (pdr_tb[GTP5G_PDR_QER_ID])
-//         gtp5g_pdr_set_qer_id(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_QER_ID]));
+    if (pdr_tb[GTP5G_PDR_QER_ID])
+        gtp5g_pdr_set_qer_id(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_QER_ID]));
 
-//     /* Not in 3GPP spec, just used for routing */
-//     if (pdr_tb[GTP5G_PDR_ROLE_ADDR_IPV4]) {
-//         ipv4.s_addr = mnl_attr_get_u32(pdr_tb[GTP5G_PDR_ROLE_ADDR_IPV4]);
-//         gtp5g_pdr_set_role_addr_ipv4(pdr, &ipv4);
-//     }
+    /* Not in 3GPP spec, just used for routing */
+    if (pdr_tb[GTP5G_PDR_ROLE_ADDR_IPV4]) {
+        ipv4.s_addr = mnl_attr_get_u32(pdr_tb[GTP5G_PDR_ROLE_ADDR_IPV4]);
+        gtp5g_pdr_set_role_addr_ipv4(pdr, &ipv4);
+    }
 
-//     /* Not in 3GPP spec, just used for buffering */
-//     if (pdr_tb[GTP5G_PDR_UNIX_SOCKET_PATH]) {
-//         pstr = mnl_attr_get_str(pdr_tb[GTP5G_PDR_UNIX_SOCKET_PATH]);
-//         gtp5g_pdr_set_unix_sock_path(pdr, pstr);
-//     }
+    /* Not in 3GPP spec, just used for buffering */
+    if (pdr_tb[GTP5G_PDR_UNIX_SOCKET_PATH]) {
+        pstr = mnl_attr_get_str(pdr_tb[GTP5G_PDR_UNIX_SOCKET_PATH]);
+        gtp5g_pdr_set_unix_sock_path(pdr, pstr);
+    }
 
-//     return MNL_CB_OK;
-// }
+    return MNL_CB_OK;
+}
 
 enum gtp5g_version {
-    GTP5G_VERSION = 4,
+    GTP5G_VERSION=3,
 };
 
 static int genl_gtp5g_version_validate_cb(const struct nlattr *attr, void *data)
@@ -900,10 +900,68 @@ static int genl_gtp5g_version_validate_cb(const struct nlattr *attr, void *data)
     const struct nlattr **tb = data;
     int type = mnl_attr_get_type(attr);
 
-    printf(">>> validate \n");
+    if (mnl_attr_type_valid(attr, GTP5G_PDR_ATTR_MAX) < 0)
+        return MNL_CB_OK;
+
+    switch(type) {
+        case GTP5G_VERSION:
+            if (mnl_attr_validate(attr, MNL_TYPE_U16) < 0)
+                goto VALIDATE_FAIL;
+            break;
+
+    default:
+        break;
+    }
+
+    tb[type] = attr;
+    return MNL_CB_OK;
+
+VALIDATE_FAIL:
+    perror("PDR mnl_attr_validate");
+    return MNL_CB_ERROR;
+}
+
+static int genl_gtp5g_version_cb2(const struct nlmsghdr *nlh, void *data)
+{
+    struct nlattr *pdr_tb[GTP5G_PDR_ATTR_MAX + 1] = {};
+    struct nlattr *pdi_tb[GTP5G_PDI_ATTR_MAX + 1] = {};
+    struct nlattr *f_teid_tb[GTP5G_F_TEID_ATTR_MAX + 1] = {};
+    struct nlattr *sdf_tb[GTP5G_SDF_FILTER_ATTR_MAX + 1] = {};
+    struct nlattr *rule_tb[GTP5G_FLOW_DESCRIPTION_ATTR_MAX + 1] = {};
+
+    struct genlmsghdr *genl;
+    struct gtp5g_pdr *pdr;
+    struct ip_filter_rule *rule;
+    struct in_addr ipv4;
+    const char *pstr;
+
+    printf(">>>>>>version3\n");
+    // mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_pdr_validate_cb, pdr_tb);
+    mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_version_validate_cb, pdr_tb);
+    pdr = *(struct gtp5g_pdr **) data = gtp5g_pdr_alloc();
+
+    if (pdr_tb[GTP5G_VERSION])
+        gtp5g_pdr_set_id(pdr, mnl_attr_get_u16(pdr_tb[GTP5G_VERSION]));
     
+    if (pdr_tb[GTP5G_PDR_PRECEDENCE])
+        gtp5g_pdr_set_precedence(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_PRECEDENCE]));
+
+    
+    /* Not in 3GPP spec, just used for routing */
+    // if (pdr_tb[GTP5G_PDR_ROLE_ADDR_IPV4]) {
+    //     ipv4.s_addr = mnl_attr_get_u32(pdr_tb[GTP5G_PDR_ROLE_ADDR_IPV4]);
+    //     gtp5g_pdr_set_role_addr_ipv4(pdr, &ipv4);
+    // }
+
+    // /* Not in 3GPP spec, just used for buffering */
+    // if (pdr_tb[GTP5G_PDR_UNIX_SOCKET_PATH]) {
+    //     pstr = mnl_attr_get_str(pdr_tb[GTP5G_PDR_UNIX_SOCKET_PATH]);
+    //     gtp5g_pdr_set_unix_sock_path(pdr, pstr);
+    // }
+
     return MNL_CB_OK;
 }
+
 
 static int genl_gtp5g_version_cb(const struct nlmsghdr *nlh, void *data)
 {
@@ -958,7 +1016,11 @@ struct gtp5g_pdr *gtp5g_pdr_find_by_id(int genl_id, struct mnl_socket *nl, struc
                                GTP5G_CMD_GET_VERSION);
     gtp5g_build_pdr_payload(nlh, dev, pdr);
 
-    if (genl_socket_talk(nl, nlh, seq, genl_gtp5g_version_cb, &rt_pdr) < 0) {
+    // if (genl_socket_talk(nl, nlh, seq, genl_gtp5g_attr_cb, &rt_pdr) < 0) {
+    //     perror("genl_socket_talk");
+    //     return NULL;
+    // }
+    if (genl_socket_talk(nl, nlh, seq, genl_gtp5g_version_cb2, &rt_pdr) < 0) {
         perror("genl_socket_talk");
         return NULL;
     }
