@@ -921,33 +921,34 @@ VALIDATE_FAIL:
     return MNL_CB_ERROR;
 }
 
+struct gtp5g_v {
+    uint16_t id;
+};
+
+
 static int genl_gtp5g_version_cb2(const struct nlmsghdr *nlh, void *data)
 {
     struct nlattr *pdr_tb[GTP5G_PDR_ATTR_MAX + 1] = {};
-    struct nlattr *pdi_tb[GTP5G_PDI_ATTR_MAX + 1] = {};
-    struct nlattr *f_teid_tb[GTP5G_F_TEID_ATTR_MAX + 1] = {};
-    struct nlattr *sdf_tb[GTP5G_SDF_FILTER_ATTR_MAX + 1] = {};
-    struct nlattr *rule_tb[GTP5G_FLOW_DESCRIPTION_ATTR_MAX + 1] = {};
 
     struct genlmsghdr *genl;
-    struct gtp5g_pdr *pdr;
+    struct gtp5g_v *ver;
     struct ip_filter_rule *rule;
     struct in_addr ipv4;
     const char *pstr;
 
-    printf(">>>>>>version4\n");
+    printf(">>>>>>version678\n");
     // mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_pdr_validate_cb, pdr_tb);
     mnl_attr_parse(nlh, sizeof(*genl), genl_gtp5g_version_validate_cb, pdr_tb);
-    pdr = *(struct gtp5g_pdr **) data = gtp5g_pdr_alloc();
+    ver = *(struct gtp5g_v **) data = gtp5g_pdr_alloc();
 
     if (pdr_tb[GTP5G_VERSION]){
         printf(">> %s", mnl_attr_get_str(pdr_tb[GTP5G_VERSION]));
-        gtp5g_pdr_set_id(pdr, mnl_attr_get_str(pdr_tb[GTP5G_VERSION]));
+        gtp5g_pdr_set_id(ver, mnl_attr_get_str(pdr_tb[GTP5G_VERSION]));
     }
         
     
-    if (pdr_tb[GTP5G_PDR_PRECEDENCE])
-        gtp5g_pdr_set_precedence(pdr, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_PRECEDENCE]));
+    // if (pdr_tb[GTP5G_PDR_PRECEDENCE])
+    //     gtp5g_pdr_set_precedence(ver, mnl_attr_get_u32(pdr_tb[GTP5G_PDR_PRECEDENCE]));
 
     
     /* Not in 3GPP spec, just used for routing */
@@ -997,7 +998,7 @@ struct gtp5g_pdr *gtp5g_pdr_find_by_id(int genl_id, struct mnl_socket *nl, struc
 {
     char buf[MNL_SOCKET_BUFFER_SIZE];
     struct nlmsghdr *nlh;
-    struct gtp5g_pdr *rt_pdr = NULL;
+    struct gtp5g_v *rt_ver = NULL;
     uint32_t seq = time(NULL);
 
     // nlh = genl_nlmsg_build_hdr(buf, genl_id, NLM_F_ACK, ++seq,
@@ -1008,7 +1009,7 @@ struct gtp5g_pdr *gtp5g_pdr_find_by_id(int genl_id, struct mnl_socket *nl, struc
     //     perror("genl_socket_talk");
     //     return NULL;
     // }
-    printf(">>> pdr gg\n");
+    printf(">>> pdr gg6\n");
 
     nlh = genl_nlmsg_build_hdr(buf, genl_id, NLM_F_ACK, ++seq,
                                GTP5G_CMD_GET_VERSION);
@@ -1018,11 +1019,11 @@ struct gtp5g_pdr *gtp5g_pdr_find_by_id(int genl_id, struct mnl_socket *nl, struc
     //     perror("genl_socket_talk");
     //     return NULL;
     // }
-    if (genl_socket_talk(nl, nlh, seq, genl_gtp5g_version_cb2, &rt_pdr) < 0) {
+    if (genl_socket_talk(nl, nlh, seq, genl_gtp5g_version_cb2, &rt_ver) < 0) {
         perror("genl_socket_talk");
         return NULL;
     }
 
-    return rt_pdr;
+    return rt_ver;
 }
 EXPORT_SYMBOL(gtp5g_pdr_find_by_id);
